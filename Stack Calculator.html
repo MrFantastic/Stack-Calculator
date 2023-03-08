@@ -1,0 +1,160 @@
+<input type="textbox" id="value" />
+<input type="button" id="push" value="Push to stack" onclick="main()" />
+<br><br><br>
+<p id="output"></p>
+
+
+<script>
+   var Node = function(_content) {
+  //doubley linked list since there are two pointers
+
+  this.next = null;
+  this.last = null;
+  this.content = _content;
+  this.ID = null;
+
+}
+
+var Stack = function() {
+  //No top or bottom to start so they are set to null
+  this.bottom = null;
+  this.top = null;
+
+
+
+  this.push = function(_content) {
+    //if there is no bottom then it makes the node the bottom
+    if (this.bottom == null) {
+      this.bottom = new Node(_content);
+      this.top = this.bottom; // top and bottom equal since there is only one input so its both at once
+      return this;
+    }
+    //if there is already a node then this would happen
+    var addedNode = new Node(_content);
+    addedNode.last = this.top; // pointer to previous node
+    this.top.next = addedNode; // current top points to new
+    this.top = addedNode; // which becomes new top
+    return this;
+  }
+
+
+  this.pop = function() {
+    //this checks if the stack has anything in it if there is nothing it returns null
+    if (this.bottom == null) {
+      alert("The Stack is Empty");
+      return null;
+    }
+
+
+    // Case of one node
+    if (this.bottom == this.top) { // single node case
+      var temp = this.top; // store it so you can return it 
+      this.top = null; // clears node
+      this.bottom = null; // clears node
+      return temp; // this returns the node, not the content of the node
+    }
+
+
+
+    // Now remove top Node
+    var a = this.top; // hold value for return
+    this.top = this.top.last;
+    this.top.next = null;
+
+    return a;
+  }
+
+  this.toString = function() {
+    var str = "";
+    var node = this.bottom;
+
+    while (node != null) {
+      str += node.content;
+      node = node.next;
+    }
+    return str;
+  }
+}
+
+function clearDisplay() {
+  // clear display
+  document.getElementById("value").value = "";
+}
+
+var stack = new Stack();
+
+function main() //added push function
+{
+
+  var input = document.getElementById("value").value;
+  if (input === "" || input === " ") {
+    alert("Please enter a number");
+  }
+  if (input == "+") {
+    addition();
+		input = "";
+  }
+  if (input == "*") {
+    mutlipcation();
+    input = "";
+  }
+  if (input == "-") {
+    substraction();
+    input = "";
+  }
+  if (input == "/") {
+    divison();
+    input = "";
+    
+  }
+  else {
+    clearDisplay();
+    stack.push(input);
+    document.getElementById('output').innerHTML = stack.toString();
+
+		
+  }
+}
+
+function divison() {
+  var num1 = stack.pop().content;
+  var num2 = stack.pop().content;
+  var parsed1 = parseInt(num1);
+  var parsed2 = parseInt(num2);
+  stack.push(parsed2 / parsed1);
+  clearDisplay();
+  document.getElementById('output').innerHTML = stack.toString();
+}
+
+function mutlipcation() {
+  var num1 = stack.pop().content;
+  var num2 = stack.pop().content;
+  var parsed1 = parseInt(num1);
+  var parsed2 = parseInt(num2);
+  stack.push(parsed1 * parsed2);
+  clearDisplay();
+  document.getElementById('output').innerHTML = stack.toString();
+}
+
+function addition() {
+  var num1 = stack.pop().content;
+  var num2 = stack.pop().content;
+  var parsed1 = parseInt(num1);
+  var parsed2 = parseInt(num2);
+  stack.push(parsed1 + parsed2);
+  clearDisplay();
+  document.getElementById('output').innerHTML = stack.toString();
+}
+
+function substraction() {
+  var num1 = stack.pop().content;
+  var num2 = stack.pop().content;
+  var parsed1 = parseInt(num1);
+  var parsed2 = parseInt(num2);
+  stack.push(parsed2 - parsed1);
+
+  clearDisplay();
+  document.getElementById('output').innerHTML = stack.toString();
+}
+ 
+</script>
